@@ -13,9 +13,6 @@ class Restaurantes
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column]
     private ?int $codRes = null;
 
     #[ORM\Column(length: 90)]
@@ -43,12 +40,6 @@ class Restaurantes
     {
         $this->restaurante = new ArrayCollection();
     }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getCodRes(): ?int
     {
         return $this->codRes;

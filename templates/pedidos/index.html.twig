@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pedidos index{% endblock %}
+
+{% block body %}
+    <h1>Pedidos index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>CodPed</th>
+                <th>Fecha</th>
+                <th>Enviado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.codPed }}</td>
+                <td>{{ pedido.fecha ? pedido.fecha|date('Y-m-d') : '' }}</td>
+                <td>{{ pedido.enviado }}</td>
+                <td>
+                    <a href="{{ path('app_pedidos_show', {'codPed': pedido.codPed}) }}">show</a>
+                    <a href="{{ path('app_pedidos_edit', {'codPed': pedido.codPed}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_pedidos_new') }}">Create new</a>
+{% endblock %}

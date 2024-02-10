@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categorias index{% endblock %}
+
+{% block body %}
+    <h1>Categorias index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>CodCat</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for categoria in categorias %}
+            <tr>
+                <td>{{ categoria.codCat }}</td>
+                <td>{{ categoria.Nombre }}</td>
+                <td>{{ categoria.descripcion }}</td>
+                <td>
+                    <a href="{{ path('app_categorias_show', {'codCat': categoria.codCat}) }}">show</a>
+                    <a href="{{ path('app_categorias_edit', {'codCat': categoria.codCat}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_categorias_new') }}">Create new</a>
+{% endblock %}

@@ -13,9 +13,6 @@ class Categorias
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column]
     private ?int $codCat = null;
 
     #[ORM\Column(length: 45)]
@@ -30,11 +27,6 @@ class Categorias
     public function __construct()
     {
         $this->categoria = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getCodCat(): ?int

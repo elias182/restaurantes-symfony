@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit PedidosProductos{% endblock %}
+
+{% block body %}
+    <h1>Edit PedidosProductos</h1>
+
+    {{ include('pedidos_productos/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_pedidos_productos_index') }}">back to list</a>
+
+    {{ include('pedidos_productos/_delete_form.html.twig') }}
+{% endblock %}

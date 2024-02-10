@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Restaurantes index{% endblock %}
+
+{% block body %}
+    <h1>Restaurantes index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>CodRes</th>
+                <th>Correo</th>
+                <th>Clave</th>
+                <th>Pais</th>
+                <th>Cp</th>
+                <th>Ciudad</th>
+                <th>Direccion</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for restaurante in restaurantes %}
+            <tr>
+                <td>{{ restaurante.codRes }}</td>
+                <td>{{ restaurante.correo }}</td>
+                <td>{{ restaurante.clave }}</td>
+                <td>{{ restaurante.pais }}</td>
+                <td>{{ restaurante.cp }}</td>
+                <td>{{ restaurante.ciudad }}</td>
+                <td>{{ restaurante.direccion }}</td>
+                <td>
+                    <a href="{{ path('app_restaurantes_show', {'codRes': restaurante.codRes}) }}">show</a>
+                    <a href="{{ path('app_restaurantes_edit', {'codRes': restaurante.codRes}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_restaurantes_new') }}">Create new</a>
+{% endblock %}
