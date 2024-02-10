@@ -24,7 +24,7 @@ class Pedidos
 
     #[ORM\ManyToOne(inversedBy: 'restaurante')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?restaurantes $restaurante = null;
+    private ?Restaurantes $restaurante = null;
 
     #[ORM\OneToMany(targetEntity: PedidosProductos::class, mappedBy: 'pedido')]
     private Collection $pedido;
@@ -70,12 +70,12 @@ class Pedidos
         return $this;
     }
 
-    public function getRestaurante(): ?restaurantes
+    public function getRestaurante(): ?Restaurantes
     {
         return $this->restaurante;
     }
 
-    public function setRestaurante(?restaurantes $restaurante): static
+    public function setRestaurante(?Restaurantes $restaurante): static
     {
         $this->restaurante = $restaurante;
 
