@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>CodPedProd</th>
+                <th>Id</th>
                 <th>Unidades</th>
                 <th>actions</th>
             </tr>
@@ -16,11 +16,11 @@
         <tbody>
         {% for pedidos_producto in pedidos_productos %}
             <tr>
-                <td>{{ pedidos_producto.codPedProd }}</td>
+                <td>{{ pedidos_producto.id }}</td>
                 <td>{{ pedidos_producto.unidades }}</td>
                 <td>
-                    <a href="{{ path('app_pedidos_productos_show', {'codPedProd': pedidos_producto.codPedProd}) }}">show</a>
-                    <a href="{{ path('app_pedidos_productos_edit', {'codPedProd': pedidos_producto.codPedProd}) }}">edit</a>
+                    <a href="{{ path('app_pedidos_productos_show', {'id': pedidos_producto.id}) }}">show</a>
+                    <a href="{{ path('app_pedidos_productos_edit', {'id': pedidos_producto.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

@@ -11,42 +11,22 @@ class PedidosProductos
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $codPedProd = null;
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'pedidosProductos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Pedidos $pedido = null;
+
+    #[ORM\ManyToOne(inversedBy: 'pedidosProductos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Productos $producto = null;
 
     #[ORM\Column]
     private ?int $unidades = null;
 
-    #[ORM\ManyToOne(inversedBy: 'pedido')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Pedidos $pedido = null;
-
-    #[ORM\ManyToOne(inversedBy: 'producto')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Productos $producto = null;
-
-
-    public function getCodPedProd(): ?int
+    public function getId(): ?int
     {
-        return $this->codPedProd;
-    }
-
-    public function setCodPedProd(int $codPedProd): static
-    {
-        $this->codPedProd = $codPedProd;
-
-        return $this;
-    }
-
-    public function getUnidades(): ?int
-    {
-        return $this->unidades;
-    }
-
-    public function setUnidades(int $unidades): static
-    {
-        $this->unidades = $unidades;
-
-        return $this;
+        return $this->id;
     }
 
     public function getPedido(): ?Pedidos
@@ -69,6 +49,18 @@ class PedidosProductos
     public function setProducto(?Productos $producto): static
     {
         $this->producto = $producto;
+
+        return $this;
+    }
+
+    public function getUnidades(): ?int
+    {
+        return $this->unidades;
+    }
+
+    public function setUnidades(int $unidades): static
+    {
+        $this->unidades = $unidades;
 
         return $this;
     }

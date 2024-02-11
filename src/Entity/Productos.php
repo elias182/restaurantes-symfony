@@ -13,7 +13,7 @@ class Productos
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $codProd = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 45)]
     private ?string $nombre = null;
@@ -27,30 +27,21 @@ class Productos
     #[ORM\Column]
     private ?int $stock = null;
 
-    #[ORM\OneToMany(targetEntity: PedidosProductos::class, mappedBy: 'producto')]
-    private Collection $producto;
-
-    #[ORM\ManyToOne(inversedBy: 'categoria')]
+    #[ORM\ManyToOne(inversedBy: 'productos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorias $categoria = null;
 
+    #[ORM\OneToMany(targetEntity: PedidosProductos::class, mappedBy: 'producto')]
+    private Collection $pedidosProductos;
+
     public function __construct()
     {
-        $this->producto = new ArrayCollection();
+        $this->pedidosProductos = new ArrayCollection();
     }
 
-    
-
-    public function getCodProd(): ?int
+    public function getId(): ?int
     {
-        return $this->codProd;
-    }
-
-    public function setCodProd(int $codProd): static
-    {
-        $this->codProd = $codProd;
-
-        return $this;
+        return $this->id;
     }
 
     public function getNombre(): ?string
@@ -101,36 +92,6 @@ class Productos
         return $this;
     }
 
-    /**
-     * @return Collection<int, PedidosProductos>
-     */
-    public function getProducto(): Collection
-    {
-        return $this->producto;
-    }
-
-    public function addProducto(PedidosProductos $producto): static
-    {
-        if (!$this->producto->contains($producto)) {
-            $this->producto->add($producto);
-            $producto->setProducto($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProducto(PedidosProductos $producto): static
-    {
-        if ($this->producto->removeElement($producto)) {
-            // set the owning side to null (unless already changed)
-            if ($producto->getProducto() === $this) {
-                $producto->setProducto(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCategoria(): ?Categorias
     {
         return $this->categoria;
@@ -139,6 +100,36 @@ class Productos
     public function setCategoria(?Categorias $categoria): static
     {
         $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PedidosProductos>
+     */
+    public function getPedidosProductos(): Collection
+    {
+        return $this->pedidosProductos;
+    }
+
+    public function addPedidosProducto(PedidosProductos $pedidosProducto): static
+    {
+        if (!$this->pedidosProductos->contains($pedidosProducto)) {
+            $this->pedidosProductos->add($pedidosProducto);
+            $pedidosProducto->setProducto($this);
+        }
+
+        return $this;
+    }
+
+    public function removePedidosProducto(PedidosProductos $pedidosProducto): static
+    {
+        if ($this->pedidosProductos->removeElement($pedidosProducto)) {
+            // set the owning side to null (unless already changed)
+            if ($pedidosProducto->getProducto() === $this) {
+                $pedidosProducto->setProducto(null);
+            }
+        }
 
         return $this;
     }

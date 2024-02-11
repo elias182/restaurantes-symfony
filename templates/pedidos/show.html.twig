@@ -8,8 +8,8 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>CodPed</th>
-                <td>{{ pedido.codPed }}</td>
+                <th>Id</th>
+                <td>{{ pedido.id }}</td>
             </tr>
             <tr>
                 <th>Fecha</th>
@@ -24,7 +24,7 @@
 
     <a href="{{ path('app_pedidos_index') }}">back to list</a>
 
-    <a href="{{ path('app_pedidos_edit', {'codPed': pedido.codPed}) }}">edit</a>
+    <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}">edit</a>
 
     {{ include('pedidos/_delete_form.html.twig') }}
 {% endblock %}

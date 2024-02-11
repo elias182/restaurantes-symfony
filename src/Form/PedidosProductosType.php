@@ -2,9 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\pedidos;
+use App\Entity\Pedidos;
 use App\Entity\PedidosProductos;
-use App\Entity\productos;
+use App\Entity\Productos;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,11 +17,11 @@ class PedidosProductosType extends AbstractType
         $builder
             ->add('unidades')
             ->add('pedido', EntityType::class, [
-                'class' => pedidos::class,
+                'class' => Pedidos::class,
 'choice_label' => 'id',
             ])
             ->add('producto', EntityType::class, [
-                'class' => productos::class,
+                'class' => Productos::class,
 'choice_label' => 'id',
             ])
         ;

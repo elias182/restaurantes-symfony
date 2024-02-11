@@ -42,7 +42,7 @@ class PedidosController extends AbstractController
         ]);
     }
 
-    #[Route('/{codPed}', name: 'app_pedidos_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_pedidos_show', methods: ['GET'])]
     public function show(Pedidos $pedido): Response
     {
         return $this->render('pedidos/show.html.twig', [
@@ -50,7 +50,7 @@ class PedidosController extends AbstractController
         ]);
     }
 
-    #[Route('/{codPed}/edit', name: 'app_pedidos_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_pedidos_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pedidos $pedido, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(PedidosType::class, $pedido);
@@ -68,10 +68,10 @@ class PedidosController extends AbstractController
         ]);
     }
 
-    #[Route('/{codPed}', name: 'app_pedidos_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_pedidos_delete', methods: ['POST'])]
     public function delete(Request $request, Pedidos $pedido, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$pedido->getCodPed(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$pedido->getId(), $request->request->get('_token'))) {
             $entityManager->remove($pedido);
             $entityManager->flush();
         }

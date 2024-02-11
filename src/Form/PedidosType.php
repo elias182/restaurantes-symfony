@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Pedidos;
-use App\Entity\restaurantes;
+use App\Entity\Restaurantes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +17,7 @@ class PedidosType extends AbstractType
             ->add('fecha')
             ->add('enviado')
             ->add('restaurante', EntityType::class, [
-                'class' => restaurantes::class,
+                'class' => Restaurantes::class,
 'choice_label' => 'id',
             ])
         ;

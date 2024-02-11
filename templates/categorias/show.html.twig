@@ -8,12 +8,12 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>CodCat</th>
-                <td>{{ categoria.codCat }}</td>
+                <th>Id</th>
+                <td>{{ categoria.id }}</td>
             </tr>
             <tr>
                 <th>Nombre</th>
-                <td>{{ categoria.Nombre }}</td>
+                <td>{{ categoria.nombre }}</td>
             </tr>
             <tr>
                 <th>Descripcion</th>
@@ -24,7 +24,7 @@
 
     <a href="{{ path('app_categorias_index') }}">back to list</a>
 
-    <a href="{{ path('app_categorias_edit', {'codCat': categoria.codCat}) }}">edit</a>
+    <a href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">edit</a>
 
     {{ include('categorias/_delete_form.html.twig') }}
 {% endblock %}

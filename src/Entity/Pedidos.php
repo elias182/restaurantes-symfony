@@ -14,7 +14,7 @@ class Pedidos
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $codPed = null;
+    private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $fecha = null;
@@ -22,28 +22,21 @@ class Pedidos
     #[ORM\Column]
     private ?int $enviado = null;
 
-    #[ORM\ManyToOne(inversedBy: 'restaurante')]
+    #[ORM\ManyToOne(inversedBy: 'pedidos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Restaurantes $restaurante = null;
 
     #[ORM\OneToMany(targetEntity: PedidosProductos::class, mappedBy: 'pedido')]
-    private Collection $pedido;
+    private Collection $pedidosProductos;
 
     public function __construct()
     {
-        $this->pedido = new ArrayCollection();
+        $this->pedidosProductos = new ArrayCollection();
     }
 
-    public function getCodPed(): ?int
+    public function getId(): ?int
     {
-        return $this->codPed;
-    }
-
-    public function setCodPed(int $codPed): static
-    {
-        $this->codPed = $codPed;
-
-        return $this;
+        return $this->id;
     }
 
     public function getFecha(): ?\DateTimeInterface
@@ -85,27 +78,27 @@ class Pedidos
     /**
      * @return Collection<int, PedidosProductos>
      */
-    public function getPedido(): Collection
+    public function getPedidosProductos(): Collection
     {
-        return $this->pedido;
+        return $this->pedidosProductos;
     }
 
-    public function addPedido(PedidosProductos $pedido): static
+    public function addPedidosProducto(PedidosProductos $pedidosProducto): static
     {
-        if (!$this->pedido->contains($pedido)) {
-            $this->pedido->add($pedido);
-            $pedido->setPedido($this);
+        if (!$this->pedidosProductos->contains($pedidosProducto)) {
+            $this->pedidosProductos->add($pedidosProducto);
+            $pedidosProducto->setPedido($this);
         }
 
         return $this;
     }
 
-    public function removePedido(PedidosProductos $pedido): static
+    public function removePedidosProducto(PedidosProductos $pedidosProducto): static
     {
-        if ($this->pedido->removeElement($pedido)) {
+        if ($this->pedidosProductos->removeElement($pedidosProducto)) {
             // set the owning side to null (unless already changed)
-            if ($pedido->getPedido() === $this) {
-                $pedido->setPedido(null);
+            if ($pedidosProducto->getPedido() === $this) {
+                $pedidosProducto->setPedido(null);
             }
         }
 

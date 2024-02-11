@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>CodCat</th>
+                <th>Id</th>
                 <th>Nombre</th>
                 <th>Descripcion</th>
                 <th>actions</th>
@@ -17,12 +17,12 @@
         <tbody>
         {% for categoria in categorias %}
             <tr>
-                <td>{{ categoria.codCat }}</td>
-                <td>{{ categoria.Nombre }}</td>
+                <td>{{ categoria.id }}</td>
+                <td>{{ categoria.nombre }}</td>
                 <td>{{ categoria.descripcion }}</td>
                 <td>
-                    <a href="{{ path('app_categorias_show', {'codCat': categoria.codCat}) }}">show</a>
-                    <a href="{{ path('app_categorias_edit', {'codCat': categoria.codCat}) }}">edit</a>
+                    <a href="{{ path('app_categorias_show', {'id': categoria.id}) }}">show</a>
+                    <a href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

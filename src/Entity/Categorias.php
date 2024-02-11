@@ -13,42 +13,35 @@ class Categorias
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $codCat = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 45)]
-    private ?string $Nombre = null;
+    private ?string $nombre = null;
 
     #[ORM\Column(length: 200)]
     private ?string $descripcion = null;
 
     #[ORM\OneToMany(targetEntity: Productos::class, mappedBy: 'categoria')]
-    private Collection $categoria;
+    private Collection $productos;
 
     public function __construct()
     {
-        $this->categoria = new ArrayCollection();
+        $this->productos = new ArrayCollection();
     }
 
-    public function getCodCat(): ?int
+    public function getId(): ?int
     {
-        return $this->codCat;
-    }
-
-    public function setCodCat(int $codCat): static
-    {
-        $this->codCat = $codCat;
-
-        return $this;
+        return $this->id;
     }
 
     public function getNombre(): ?string
     {
-        return $this->Nombre;
+        return $this->nombre;
     }
 
-    public function setNombre(string $Nombre): static
+    public function setNombre(string $nombre): static
     {
-        $this->Nombre = $Nombre;
+        $this->nombre = $nombre;
 
         return $this;
     }
@@ -68,27 +61,27 @@ class Categorias
     /**
      * @return Collection<int, Productos>
      */
-    public function getCategoria(): Collection
+    public function getProductos(): Collection
     {
-        return $this->categoria;
+        return $this->productos;
     }
 
-    public function addCategorium(Productos $categorium): static
+    public function addProducto(Productos $producto): static
     {
-        if (!$this->categoria->contains($categorium)) {
-            $this->categoria->add($categorium);
-            $categorium->setCategoria($this);
+        if (!$this->productos->contains($producto)) {
+            $this->productos->add($producto);
+            $producto->setCategoria($this);
         }
 
         return $this;
     }
 
-    public function removeCategorium(Productos $categorium): static
+    public function removeProducto(Productos $producto): static
     {
-        if ($this->categoria->removeElement($categorium)) {
+        if ($this->productos->removeElement($producto)) {
             // set the owning side to null (unless already changed)
-            if ($categorium->getCategoria() === $this) {
-                $categorium->setCategoria(null);
+            if ($producto->getCategoria() === $this) {
+                $producto->setCategoria(null);
             }
         }
 

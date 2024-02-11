@@ -42,7 +42,7 @@ class CategoriasController extends AbstractController
         ]);
     }
 
-    #[Route('/{codCat}', name: 'app_categorias_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_categorias_show', methods: ['GET'])]
     public function show(Categorias $categoria): Response
     {
         return $this->render('categorias/show.html.twig', [
@@ -50,7 +50,7 @@ class CategoriasController extends AbstractController
         ]);
     }
 
-    #[Route('/{codCat}/edit', name: 'app_categorias_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_categorias_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Categorias $categoria, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CategoriasType::class, $categoria);
@@ -68,10 +68,10 @@ class CategoriasController extends AbstractController
         ]);
     }
 
-    #[Route('/{codCat}', name: 'app_categorias_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_categorias_delete', methods: ['POST'])]
     public function delete(Request $request, Categorias $categoria, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$categoria->getCodCat(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$categoria->getId(), $request->request->get('_token'))) {
             $entityManager->remove($categoria);
             $entityManager->flush();
         }
