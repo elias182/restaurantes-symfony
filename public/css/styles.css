@@ -1,0 +1,48 @@
+body{
+    margin: 0;
+    background-color: black;
+}
+
+.contain {
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgb(0, 0, 0)), url('https://noa.aon.es/wp-content/uploads/2022/10/impacto-covid-suministro-alimentos.jpg') no-repeat center center;
+    background-size: cover;
+    height: 90vh;
+}
+
+.container-fluid{
+    height: 40vh;
+    width: 100vw;
+}
+
+.row1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.row1:first-child{
+    text-align: center;
+}
+
+
+.col-md-8 {
+    background-color: rgba(255, 255, 255, 0.401); /* Agrega un fondo semi-transparente para mejorar la legibilidad del texto */
+    padding: 20px; /* Añade algo de espacio alrededor del contenido */
+    border-radius: 10px; /* Añade esquinas redondeadas al contenedor */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Agrega una sombra suave al contenedor */
+    margin-top: 100px;
+    width: 50%;
+
+}
+.col-md-9{
+    width: 20%;
+    height: 20vh;
+    align-items: center;
+    margin: 20px;
+
+}
+
+.img-fluid {
+    border-radius: 10px; /* Añade esquinas redondeadas a la imagen */
+}

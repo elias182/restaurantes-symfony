@@ -1,0 +1,43 @@
+{# templates/welcome/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenido a nuestra empresa de suministro{% endblock %}
+
+{% block body %}
+{% include 'layout/header.html.twig' %}
+<div class="contain">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Bienvenido a Sumiifit</h1>
+            <p>Somos una empresa dedicada a proveer productos de alta calidad a restaurantes y establecimientos de comida.</p>
+            <p>Contamos con una amplia variedad de productos frescos y de primera calidad para satisfacer las necesidades de tu negocio.</p>
+            <p>¡Confía en nosotros para abastecer tu restaurante y llevar tu negocio al siguiente nivel!</p>
+        </div>
+        
+    </div>
+</div>
+<div class="container-fluid ">
+    <div class="row1">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Productos</h5>
+                    <p class="card-text">Explora nuestra amplia selección de productos frescos y de alta calidad.</p>
+                    <a href="#" class="btn btn-primary">Ver productos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Categorías</h5>
+                    <p class="card-text">Descubre nuestras diversas categorías de productos para satisfacer todas tus necesidades.</p>
+                    <a href="#" class="btn btn-primary">Ver categorías</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
