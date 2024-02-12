@@ -7,10 +7,19 @@
 {% block body %}
 {% include 'layout/header.html.twig' %}
 <div class="contain">
+{% if app.flashes('sent') %}
+    <div class="alert alert-success">
+    <p>Se ha enviado un email a su dirección de correo. Verifíquelo.</p>
+    </div>
+{% elseif app.flashes('verificado') %}
+    <div class="alert alert-success">
+    <p>Su email ha sido verificado.</p>
+    </div>
+{% endif %}
     <div class="row">
         <div class="col-md-8">
             <h1>Bienvenido a Sumiifit</h1>
-            <p>Somos una empresa dedicada a proveer productos de alta calidad a restaurantes y establecimientos de comida.</p>
+            <p>Somos una empresa dedicada a proveer productos de alta calidad a restaurantes y establecim ientos de comida.</p>
             <p>Contamos con una amplia variedad de productos frescos y de primera calidad para satisfacer las necesidades de tu negocio.</p>
             <p>¡Confía en nosotros para abastecer tu restaurante y llevar tu negocio al siguiente nivel!</p>
         </div>
