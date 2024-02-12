@@ -1,6 +1,5 @@
 body{
     margin: 0;
-    background-color: black;
 }
 
 .contain {
@@ -12,6 +11,11 @@ body{
 .container-fluid{
     height: 40vh;
     width: 100vw;
+
+}
+
+.navbar{
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.448);
 }
 
 .row1{
@@ -46,3 +50,26 @@ body{
 .img-fluid {
     border-radius: 10px; /* Añade esquinas redondeadas a la imagen */
 }
+
+.register, .login, .logout{
+    font-weight: bolder;
+}
+.register{
+    margin-left: 300px;
+}
+.navbar-brand img{
+    width: 65px;
+    height: 50px;
+}
+.funcion{
+    border-bottom:3px solid white;
+}
+.funcion:hover{
+    border-bottom:3px solid green;
+}
+
+@media (max-width: 992px) {
+    .register{
+        margin-left: 0;
+    }
+  }
