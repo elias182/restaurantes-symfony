@@ -22,6 +22,7 @@ class ProductosType extends AbstractType
                 'class' => Categorias::class,
 'choice_label' => 'id',
             ])
+            ->add('precio')
         ;
     }
 

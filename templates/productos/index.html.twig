@@ -13,6 +13,7 @@
                 <th>Descripcion</th>
                 <th>Peso</th>
                 <th>Stock</th>
+                <th>Precio</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -24,9 +25,14 @@
                 <td>{{ producto.descripcion }}</td>
                 <td>{{ producto.peso }}</td>
                 <td>{{ producto.stock }}</td>
+                <td>{{ producto.precio }}</td>
                 <td>
                     <a href="{{ path('app_productos_show', {'id': producto.id}) }}">show</a>
                     <a href="{{ path('app_productos_edit', {'id': producto.id}) }}">edit</a>
+                    <form action="{{ path('agregar_al_carrito') }}" method="post">
+                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                        <button type="submit">Agregar al carrito</button>
+                    </form>
                 </td>
             </tr>
         {% else %}

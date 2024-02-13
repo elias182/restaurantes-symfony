@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block body %}
+    <h1>Carrito de Compras</h1>
+
+    {% if carrito is empty %}
+        <p>No hay productos en el carrito.</p>
+    {% else %}
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Peso</th>
+
+                <th>precio</th>
+
+                <th>Cantidad</th>
+
+                <th>Acciones</th>
+            </tr>
+            {% for producto in carrito %}
+                <tr>
+                    <td>{{ producto.producto.nombre }}</td>
+                    <td>{{ producto.producto.descripcion }}</td>
+                    <td>{{ producto.producto.peso }}</td>
+                    <td>{{ producto.producto.precio }}</td>
+                    <td>
+                        <a href="{{ path('aumentar', {'indice': loop.index0}) }}">+</a>
+                        {{ producto.cantidad }}
+                        <a href="{{ path('disminuir', {'indice': loop.index0}) }}">-</a>
+                    </td>
+                    <td><a href="{{ path('eliminar_producto', {'indice': loop.index0}) }}">Eliminar</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    <a href="/">Seguir Comprando</a>
+{% endblock %}
