@@ -51,6 +51,7 @@ class Restaurantes implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
+        $this->roles = ['ROLE_USER'];
         $this->pedidos = new ArrayCollection();
     }
 
