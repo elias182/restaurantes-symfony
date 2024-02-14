@@ -24,7 +24,7 @@ class PedidosController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_pedidos_new', methods: ['GET', 'POST'])]
+    #[Route('/create', name: 'app_pedidos_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
     // Obtener el contenido del carrito de la sesión

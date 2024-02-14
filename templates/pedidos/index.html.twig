@@ -12,7 +12,9 @@
                 <th>Id</th>
                 <th>Fecha</th>
                 <th>Enviado</th>
+                {% if is_granted('ROLE_ADMIN')%}
                 <th>actions</th>
+                {% endif%}
             </tr>
         </thead>
         <tbody>
@@ -21,10 +23,12 @@
                 <td>{{ pedido.id }}</td>
                 <td>{{ pedido.fecha ? pedido.fecha|date('Y-m-d') : '' }}</td>
                 <td>{{ pedido.enviado }}</td>
+                {% if is_granted('ROLE_ADMIN')%}
                 <td>
                     <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}">show</a>
                     <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}">edit</a>
                 </td>
+                {% endif%}
             </tr>
         {% else %}
             <tr>
@@ -34,5 +38,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_pedidos_new') }}">Create new</a>
 {% endblock %}

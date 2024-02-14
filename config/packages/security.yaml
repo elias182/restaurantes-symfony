@@ -22,6 +22,7 @@ security:
                 enable_csrf: true
             logout:
                 path: app_logout
+            user_checker: App\Security\UsuarioVerificado
                 # where to redirect after logout
                 # target: app_any_route
 
@@ -35,6 +36,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: /new, roles: ROLE_ADMIN }
+        - { path: /edit, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
