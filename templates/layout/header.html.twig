@@ -21,10 +21,10 @@
                         <a class="nav-link" href="{{ path('app_productos_index') }}">Productos</a>
                     </li>
                     <li class="nav-item funcion">
-                        <a class="nav-link" href="#">Categorias</a>
+                        <a class="nav-link" href="{{ path('app_categorias_index') }}">Categorias</a>
                     </li>
                     <li class="nav-item funcion">
-                        <a class="nav-link" href="#">Contacto</a>
+                        <a class="nav-link" href="{{ path('carrito') }}">Mi carrito</a>
                     </li>
                     {% if app.user %}
                         <li class="nav-item">
