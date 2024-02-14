@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Productos de la categoría {{ categoria.nombre }}{% endblock %}
+
+{% block body %}
+{% include 'layout/header.html.twig' %}
+    <h1>Productos de la categoría {{ categoria.nombre }}</h1>
+
+    <ul>
+        {% for producto in productos %}
+            <li>
+                {{ producto.nombre }} - Precio: {{ producto.precio }}
+                <form action="{{ path('agregar_al_carrito') }}" method="post">
+                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                        <button type="submit">Agregar al carrito</button>
+                    </form>
+            </li>
+        {% else %}
+            <li>No se encontraron productos para esta categoría.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

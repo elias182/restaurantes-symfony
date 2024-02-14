@@ -8,30 +8,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Productos;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
 
 class CarritoController extends AbstractController
 {
     #[Route('/carrito', name: 'carrito')]
-    public function index(PedidosRepository $pedidosRepository): Response
-{
-    // Obtener el usuario actual
-    $user = $this->getUser();
+    public function index(Request $request): Response
+    {
+        $session = $request->getSession();
+        $carrito = $session->get('carrito', []);
 
-    // Verificar si el usuario está autenticado
-    if ($user) {
-        // Obtener los pedidos del usuario actual
-        $pedidos = $user->getPedidos();
-    } else {
-        // Enviar una respuesta de error o redirigir al usuario a la página de inicio de sesión
-        // Por ejemplo:
-        throw $this->createAccessDeniedException('Debes iniciar sesión para ver tus pedidos.');
+        return $this->render('carrito/index.html.twig', [
+            'carrito' => $carrito,
+        ]);
     }
-
-    return $this->render('pedidos/index.html.twig', [
-        'pedidos' => $pedidos,
-    ]);
-}
 
     #[Route('/agregar/{producto}', name: 'agregar_producto')]
     public function agregarProducto(Request $request, $producto): Response

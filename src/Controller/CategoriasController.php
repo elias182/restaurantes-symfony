@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Categorias;
 use App\Form\CategoriasType;
 use App\Repository\CategoriasRepository;
+use App\Repository\ProductosRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,5 +78,21 @@ class CategoriasController extends AbstractController
         }
 
         return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/productos', name: 'productos_por_categoria', methods: ['GET'])]
+    public function productosPorCategoria(?Categorias $categoria, ProductosRepository $productosRepository): Response
+    {
+        if (!$categoria) {
+            // Manejar el caso cuando no se proporciona una categoría válida, por ejemplo, redirigir a la página de categorías
+            return $this->redirectToRoute('app_categorias_index');
+        }
+    
+        $productos = $productosRepository->findByCategoria($categoria);
+    
+        return $this->render('categorias/productos_por_categoria.html.twig', [
+            'categoria' => $categoria,
+            'productos' => $productos,
+        ]);
     }
 }

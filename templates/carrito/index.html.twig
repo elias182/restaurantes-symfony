@@ -26,8 +26,8 @@
                 <tr>
                     <td>{{ producto.producto.nombre }}</td>
                     <td>{{ producto.producto.descripcion }}</td>
-                    <td>{{ producto.producto.peso }}</td>
-                    <td>{{ producto.producto.precio }}</td>
+                    <td>{{ producto.producto.peso }} Kg.</td>
+                    <td>{{ producto.producto.precio }} €.</td>
                     <td>
                         <a href="{{ path('aumentar', {'indice': loop.index0}) }}">+</a>
                         {{ producto.cantidad }}
@@ -43,8 +43,12 @@
                 <td></td> <!-- Columna vacía para mantener la alineación -->
             </tr>
         </table>
-        <a href="{{ path('app_pedidos_new') }}">Comprar</a>
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('app_pedidos_new') }}">Comprar</a>
+        {% else %}
+            <p>Debes <a href="{{ path('app_login') }}">iniciar sesión</a> para realizar la compra.</p>
+        {% endif %}
     {% endif %}
 
-    <a href="/">Seguir Comprando</a>
+    <a href="{{path('app_productos_index')}}">Seguir Comprando</a>
 {% endblock %}

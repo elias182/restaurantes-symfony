@@ -3,6 +3,7 @@
 {% block title %}Edit Pedidos{% endblock %}
 
 {% block body %}
+{% include 'layout/header.html.twig' %}
     <h1>Edit Pedidos</h1>
 
     {{ include('pedidos/_form.html.twig', {'button_label': 'Update'}) }}
