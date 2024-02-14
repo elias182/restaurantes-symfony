@@ -10,8 +10,8 @@
             <tr>
                 <th>Id</th>
                 <th>Fecha</th>
-                <th>Enviado</th>
-                <th>actions</th>
+                <th>Estado</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,15 +19,35 @@
             <tr>
                 <td>{{ pedido.id }}</td>
                 <td>{{ pedido.fecha ? pedido.fecha|date('Y-m-d') : '' }}</td>
-                <td>{{ pedido.enviado }}</td>
                 <td>
-                    <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}">show</a>
-                    <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}">edit</a>
+                    {% if pedido.enviado == 0 %}
+                        En proceso
+                    {% elseif pedido.enviado == 1 %}
+                        Enviado
+                    {% elseif pedido.enviado == 2 %}
+                        Cancelado
+                    {% else %}
+                        Desconocido
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}">Show</a>
+                    <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}">Edit</a>
+                    
+                        <form action="{{ path('confirmar_pedido', {'id': pedido.id}) }}" method="post">
+                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                        </form>
+
+
+                        <form action="{{ path('app_pedidos_cancelar', {'id': pedido.id}) }}" method="post">
+                            <button type="submit" class="btn btn-danger">Cancelar</button>
+                        </form>
+
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">No records found</td>
             </tr>
         {% endfor %}
         </tbody>

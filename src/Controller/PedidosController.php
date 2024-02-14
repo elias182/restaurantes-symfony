@@ -12,15 +12,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 #[Route('/pedidos')]
 class PedidosController extends AbstractController
 {
+    private $authorizationChecker;
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
     #[Route('/', name: 'app_pedidos_index', methods: ['GET'])]
     public function index(PedidosRepository $pedidosRepository): Response
     {
+        // Obtener el usuario actual
+        $user = $this->getUser();
+
+        // Verificar si el usuario está autenticado
+        if (!$user) {
+            // Enviar una respuesta de error o redirigir al usuario a la página de inicio de sesión
+            // Por ejemplo:
+            throw $this->createAccessDeniedException('Debes iniciar sesión para ver tus pedidos.');
+        }
+
+        // Verificar si el usuario es administrador
+        if ($this->authorizationChecker->isGranted('ROLE_USER')) {
+            // Si el usuario es administrador, obtener todos los pedidos
+            $pedidos = $pedidosRepository->findAll();
+        } else {
+            // Si el usuario no es administrador, obtener los pedidos del usuario actual
+            $pedidos = $pedidosRepository->findBy(['restaurante' => $user]);
+        }
+
         return $this->render('pedidos/index.html.twig', [
-            'pedidos' => $pedidosRepository->findAll(),
+            'pedidos' => $pedidos,
         ]);
     }
 
@@ -50,6 +75,11 @@ class PedidosController extends AbstractController
     
         // Verificar si el producto existe
         if ($producto) {
+            // Verificar si la cantidad solicitada es mayor que el stock disponible
+            if ($cantidad > $producto->getStock()) {
+                continue;
+            }
+
             // Crear una instancia de PedidosProductos
             $pedidosProducto = new PedidosProductos();
             $pedidosProducto->setPedido($pedido);
@@ -61,6 +91,10 @@ class PedidosController extends AbstractController
             
             // Persistir el pedidosProducto
             $entityManager->persist($pedidosProducto);
+            
+            // Reducir el stock del producto
+            $producto->setStock($producto->getStock() - $cantidad);
+            $entityManager->persist($producto);
         } else {
             // Manejar el caso en el que el producto no se encuentre en la base de datos
             // Puedes lanzar una excepción, registrar un error o simplemente ignorar el producto
@@ -69,7 +103,7 @@ class PedidosController extends AbstractController
         }
     }
 
-    // Persistir el pedido y los productos en la base de datos
+    // Persistir el pedido
     $entityManager->persist($pedido);
     $entityManager->flush();
 
@@ -79,7 +113,6 @@ class PedidosController extends AbstractController
     // Redirigir a la página de pedidos index
     return $this->redirectToRoute('app_pedidos_index', [], Response::HTTP_SEE_OTHER);
 }
-
     #[Route('/{id}', name: 'app_pedidos_show', methods: ['GET'])]
     public function show(Pedidos $pedido): Response
     {
@@ -115,5 +148,32 @@ class PedidosController extends AbstractController
         }
 
         return $this->redirectToRoute('app_pedidos_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/{id}/cancelar', name: 'app_pedidos_cancelar', methods: ['POST'])]
+    public function cancelarPedido(Request $request, Pedidos $pedido, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN'); // Verificar si el usuario es administrador
+        
+        // Cambiar el estado del pedido a cancelado (2)
+        $pedido->setEnviado(2);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Pedido cancelado exitosamente.');
+
+        return $this->redirectToRoute('app_pedidos_index');
+    }
+
+    #[Route('/{id}/confirmar', name: 'app_pedidos_confirmar', methods: ['POST'])]
+    public function confirmarPedido(Request $request, Pedidos $pedido, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN'); // Verificar si el usuario es administrador
+        
+        // Cambiar el estado del pedido a confirmado (1)
+        $pedido->setEnviado(1);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Pedido confirmado exitosamente.');
+
+        return $this->redirectToRoute('app_pedidos_index');
     }
 }

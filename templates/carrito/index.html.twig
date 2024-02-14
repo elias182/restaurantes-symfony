@@ -14,14 +14,15 @@
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Peso</th>
-
-                <th>precio</th>
-
+                <th>Precio</th>
                 <th>Cantidad</th>
-
+                <th>Total por Producto</th> <!-- Nueva columna -->
                 <th>Acciones</th>
             </tr>
+            {% set totalCarrito = 0 %}
             {% for producto in carrito %}
+                {% set totalProducto = producto.producto.precio * producto.cantidad %}
+                {% set totalCarrito = totalCarrito + totalProducto %}
                 <tr>
                     <td>{{ producto.producto.nombre }}</td>
                     <td>{{ producto.producto.descripcion }}</td>
@@ -32,9 +33,15 @@
                         {{ producto.cantidad }}
                         <a href="{{ path('disminuir', {'indice': loop.index0}) }}">-</a>
                     </td>
+                    <td>{{ totalProducto }}</td> <!-- Total por Producto -->
                     <td><a href="{{ path('eliminar_producto', {'indice': loop.index0}) }}">Eliminar</a></td>
                 </tr>
             {% endfor %}
+            <tr>
+                <td colspan="5">Total del Carrito</td>
+                <td>{{ totalCarrito }}</td> <!-- Total del Carrito -->
+                <td></td> <!-- Columna vacía para mantener la alineación -->
+            </tr>
         </table>
         <a href="{{ path('app_pedidos_new') }}">Comprar</a>
     {% endif %}
