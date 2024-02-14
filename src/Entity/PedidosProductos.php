@@ -13,14 +13,13 @@ class PedidosProductos
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'pedidosProductos')]
+    #[ORM\ManyToOne(inversedBy: 'pedidosProductos', cascade: ["persist"])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Pedidos $pedido = null;
 
-    #[ORM\ManyToOne(inversedBy: 'pedidosProductos')]
+    #[ORM\ManyToOne(inversedBy: 'pedidosProductos', cascade: ["persist"])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Productos $producto = null;
-
     #[ORM\Column]
     private ?int $unidades = null;
 

@@ -1,5 +1,6 @@
 body{
     margin: 0;
+    
 }
 
 .contain {
@@ -73,3 +74,6 @@ body{
         margin-left: 0;
     }
   }
+.container-fluid{
+    background-color: black;
+}

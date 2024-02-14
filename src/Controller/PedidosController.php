@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Pedidos;
+use App\Entity\Productos;
+use App\Entity\PedidosProductos;
 use App\Form\PedidosType;
 use App\Repository\PedidosRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,23 +26,59 @@ class PedidosController extends AbstractController
 
     #[Route('/new', name: 'app_pedidos_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $pedido = new Pedidos();
-        $form = $this->createForm(PedidosType::class, $pedido);
-        $form->handleRequest($request);
+{
+    // Obtener el contenido del carrito de la sesión
+    $session = $request->getSession();
+    $carrito = $session->get('carrito', []);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($pedido);
-            $entityManager->flush();
+    // Obtener el usuario actual (restaurante)
+    $usuario = $this->getUser(); // Suponiendo que el usuario representa al restaurante
 
-            return $this->redirectToRoute('app_pedidos_index', [], Response::HTTP_SEE_OTHER);
+    // Crear un nuevo objeto Pedido
+    $pedido = new Pedidos();
+    $pedido->setFecha(new \DateTime()); // Establecer la fecha del pedido
+    $pedido->setEnviado(0); // Marcar el pedido como no enviado (0)
+    $pedido->setRestaurante($usuario); // Establecer el usuario actual como el restaurante asociado al pedido
+
+    // Iterar sobre los elementos del carrito
+    foreach ($carrito as $item) {
+        $productoId = $item['producto']; // ID del producto
+        $cantidad = $item['cantidad']; // Cantidad del producto en el carrito
+    
+        // Obtener el producto desde la base de datos
+        $producto = $entityManager->getRepository(Productos::class)->find($productoId);
+    
+        // Verificar si el producto existe
+        if ($producto) {
+            // Crear una instancia de PedidosProductos
+            $pedidosProducto = new PedidosProductos();
+            $pedidosProducto->setPedido($pedido);
+            $pedidosProducto->setProducto($producto);
+            $pedidosProducto->setUnidades($cantidad);
+    
+            // Agregar el pedidosProducto al pedido
+            $pedido->addPedidosProducto($pedidosProducto);
+            
+            // Persistir el pedidosProducto
+            $entityManager->persist($pedidosProducto);
+        } else {
+            // Manejar el caso en el que el producto no se encuentre en la base de datos
+            // Puedes lanzar una excepción, registrar un error o simplemente ignorar el producto
+            // En este ejemplo, ignoraremos el producto y continuaremos con el siguiente
+            continue;
         }
-
-        return $this->render('pedidos/new.html.twig', [
-            'pedido' => $pedido,
-            'form' => $form,
-        ]);
     }
+
+    // Persistir el pedido y los productos en la base de datos
+    $entityManager->persist($pedido);
+    $entityManager->flush();
+
+    // Limpiar el carrito después de guardar el pedido
+    $session->set('carrito', []);
+
+    // Redirigir a la página de pedidos index
+    return $this->redirectToRoute('app_pedidos_index', [], Response::HTTP_SEE_OTHER);
+}
 
     #[Route('/{id}', name: 'app_pedidos_show', methods: ['GET'])]
     public function show(Pedidos $pedido): Response

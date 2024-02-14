@@ -26,7 +26,7 @@ class Pedidos
     #[ORM\JoinColumn(nullable: false)]
     private ?Restaurantes $restaurante = null;
 
-    #[ORM\OneToMany(targetEntity: PedidosProductos::class, mappedBy: 'pedido')]
+    #[ORM\OneToMany(targetEntity: PedidosProductos::class, mappedBy: 'pedido', cascade: ["persist"])]
     private Collection $pedidosProductos;
 
     public function __construct()

@@ -3,6 +3,7 @@
 {% block title %}Carrito de Compras{% endblock %}
 
 {% block body %}
+{% include 'layout/header.html.twig' %}
     <h1>Carrito de Compras</h1>
 
     {% if carrito is empty %}
@@ -35,6 +36,7 @@
                 </tr>
             {% endfor %}
         </table>
+        <a href="{{ path('app_pedidos_new') }}">Comprar</a>
     {% endif %}
 
     <a href="/">Seguir Comprando</a>

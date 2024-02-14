@@ -21,14 +21,14 @@
                         <a class="nav-link" href="{{ path('app_productos_index') }}">Productos</a>
                     </li>
                     <li class="nav-item funcion">
-                        <a class="nav-link" href="#">Nosotros</a>
+                        <a class="nav-link" href="#">Categorias</a>
                     </li>
                     <li class="nav-item funcion">
                         <a class="nav-link" href="#">Contacto</a>
                     </li>
                     {% if app.user %}
                         <li class="nav-item">
-                            <span class="nav-link">Bienvenido, {{ app.user.email }}</span>
+                            <span class="nav-link register">Bienvenido, {{ app.user.email }}</span>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link logout" href="{{ path('app_logout') }}">Cerrar sesión</a>

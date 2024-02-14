@@ -71,14 +71,17 @@ class CarritoController extends AbstractController
     $productoEnCarrito = false;
     foreach ($carrito as &$item) {
         if ($item['producto']->getId() === $producto->getId()) {
-            $item['cantidad'] += 1;
+            // Verificar si la cantidad en el carrito es menor que el stock disponible
+            if ($item['cantidad'] < $producto->getStock()) {
+                $item['cantidad'] += 1;
+            }
             $productoEnCarrito = true;
             break;
         }
     }
 
-    // Si el producto no está en el carrito, agregarlo con cantidad igual a uno
-    if (!$productoEnCarrito) {
+    // Si el producto no está en el carrito y la cantidad en el carrito es menor que el stock, agregarlo con cantidad igual a uno
+    if (!$productoEnCarrito && $producto->getStock() > 0) {
         $carrito[] = ['producto' => $producto, 'cantidad' => 1];
     }
 
