@@ -1,31 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Categorias{% endblock %}
+{% block title %}Detalles de Categoría{% endblock %}
 
 {% block body %}
-{% include 'layout/header.html.twig' %}
-    <h1>Categorias</h1>
+    {% include 'layout/header.html.twig' %}
+    <div class="container mt-5">
+        <h1>Detalles de Categoría</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ categoria.id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ categoria.nombre }}</td>
-            </tr>
-            <tr>
-                <th>Descripcion</th>
-                <td>{{ categoria.descripcion }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ categoria.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nombre</th>
+                    <td>{{ categoria.nombre }}</td>
+                </tr>
+                <tr>
+                    <th>Descripción</th>
+                    <td>{{ categoria.descripcion }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <a href="{{ path('app_categorias_index') }}">back to list</a>
-
-    <a href="{{ path('app_categorias_edit', {'id': categoria.id}) }}">edit</a>
-
-    {{ include('categorias/_delete_form.html.twig') }}
+        <a href="{{ path('app_categorias_index') }}" class="btn btn-secondary">Volver a la lista</a>
+        <a href="{{ path('app_categorias_edit', {'id': categoria.id}) }}" class="btn btn-primary">Editar</a>
+        {{ include('categorias/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

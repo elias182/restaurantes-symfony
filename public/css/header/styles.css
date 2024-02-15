@@ -77,3 +77,17 @@ body{
 .container-fluid{
     background-color: black;
 }
+.btn-comprar{
+    background-color: green;
+}
+
+.btn-comprar a:link{
+    color: white;
+}
+
+.btn-comprar a:visited{
+    color: white;
+}
+.btn-comprar a{
+   text-decoration: none;
+}
