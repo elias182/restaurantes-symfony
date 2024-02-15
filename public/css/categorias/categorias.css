@@ -11,7 +11,6 @@ img{
     transition: all 0.3s ease;
 }
 .categorias li a{
-    font-size:xx-large;
     text-decoration: none;
    
 }
@@ -25,12 +24,22 @@ img{
     display: flex;
     flex-direction: row;
     column-gap: 100px;
+    row-gap: 50px;
     flex-wrap: wrap;
 }
+a p:first-of-type{
+    font-size:xx-large;
+}
+
 a p{
     text-align: center;
 }
+
 .categorias li:hover{
     transform: scale(1.05);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+}
+h1{
+    text-align: center;
+    padding: 20px;
 }

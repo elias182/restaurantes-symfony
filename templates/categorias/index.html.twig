@@ -5,7 +5,7 @@
 
 {% block body %}
 {% include 'layout/header.html.twig' %}
-    <h1>Categorias</h1>
+    <h1>Categorias de Sumiifit</h1>
 
     {% if is_granted('ROLE_ADMIN') %}
         <table class="table">
@@ -43,6 +43,7 @@
                 <a href="{{ path('productos_por_categoria', {'id': categoria.id}) }}">
                 <img src="{{ asset('uploads/images/' ~ categoria.imagen) }}" alt="Imagen de la categoría">
                     <p>{{ categoria.nombre }}</p>
+                    <p><i>"{{ categoria.descripcion }}"</i></p>
                     </a>
                 </li>
             {% else %}
