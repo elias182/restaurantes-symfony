@@ -14,13 +14,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 #[Route('/pedidos')]
 class PedidosController extends AbstractController
 {
+    private $mailer;
     private $authorizationChecker;
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, MailerInterface $mailer)
     {
         $this->authorizationChecker = $authorizationChecker;
+        $this->mailer = $mailer;
     }
     #[Route('/', name: 'app_pedidos_index', methods: ['GET'])]
     public function index(PedidosRepository $pedidosRepository): Response
@@ -51,68 +56,92 @@ class PedidosController extends AbstractController
 
     #[Route('/create', name: 'app_pedidos_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-{
-    // Obtener el contenido del carrito de la sesión
-    $session = $request->getSession();
-    $carrito = $session->get('carrito', []);
+    {
+        // Obtener el contenido del carrito de la sesión
+        $session = $request->getSession();
+        $carrito = $session->get('carrito', []);
 
-    // Obtener el usuario actual (restaurante)
-    $usuario = $this->getUser(); // Suponiendo que el usuario representa al restaurante
+        // Obtener el usuario actual (restaurante)
+        $usuario = $this->getUser(); // Suponiendo que el usuario representa al restaurante
 
-    // Crear un nuevo objeto Pedido
-    $pedido = new Pedidos();
-    $pedido->setFecha(new \DateTime()); // Establecer la fecha del pedido
-    $pedido->setEnviado(0); // Marcar el pedido como no enviado (0)
-    $pedido->setRestaurante($usuario); // Establecer el usuario actual como el restaurante asociado al pedido
+        // Crear un nuevo objeto Pedido
+        $pedido = new Pedidos();
+        $pedido->setFecha(new \DateTime()); // Establecer la fecha del pedido
+        $pedido->setEnviado(0); // Marcar el pedido como no enviado (0)
+        $pedido->setRestaurante($usuario); // Establecer el usuario actual como el restaurante asociado al pedido
 
-    // Iterar sobre los elementos del carrito
-    foreach ($carrito as $item) {
-        $productoId = $item['producto']; // ID del producto
-        $cantidad = $item['cantidad']; // Cantidad del producto en el carrito
-    
-        // Obtener el producto desde la base de datos
-        $producto = $entityManager->getRepository(Productos::class)->find($productoId);
-    
-        // Verificar si el producto existe
-        if ($producto) {
-            // Verificar si la cantidad solicitada es mayor que el stock disponible
-            if ($cantidad > $producto->getStock()) {
+        // Variable para almacenar el detalle del pedido
+        $detallePedido = '';
+        // Variable para almacenar el precio total del pedido
+        $precioTotal = 0;
+
+        // Iterar sobre los elementos del carrito
+        foreach ($carrito as $item) {
+            $productoId = $item['producto']; // ID del producto
+            $cantidad = $item['cantidad']; // Cantidad del producto en el carrito
+
+            // Obtener el producto desde la base de datos
+            $producto = $entityManager->getRepository(Productos::class)->find($productoId);
+
+            // Verificar si el producto existe
+            if ($producto) {
+                // Verificar si la cantidad solicitada es mayor que el stock disponible
+                if ($cantidad > $producto->getStock()) {
+                    continue;
+                }
+
+                // Calcular el precio del producto
+                $precioProducto = $producto->getPrecio() * $cantidad;
+                // Sumar el precio del producto al precio total del pedido
+                $precioTotal += $precioProducto;
+
+                // Crear una instancia de PedidosProductos
+                $pedidosProducto = new PedidosProductos();
+                $pedidosProducto->setPedido($pedido);
+                $pedidosProducto->setProducto($producto);
+                $pedidosProducto->setUnidades($cantidad);
+
+                // Agregar el pedidosProducto al pedido
+                $pedido->addPedidosProducto($pedidosProducto);
+
+                // Persistir el pedidosProducto
+                $entityManager->persist($pedidosProducto);
+
+                // Reducir el stock del producto
+                $producto->setStock($producto->getStock() - $cantidad);
+                $entityManager->persist($producto);
+
+                // Agregar detalles del producto al detalle del pedido
+                $detallePedido .= sprintf("Producto: %s - Cantidad: %s - Precio: %s €\n", $producto->getNombre(), $cantidad, $precioProducto);
+            } else {
+                // Manejar el caso en el que el producto no se encuentre en la base de datos
+                // Puedes lanzar una excepción, registrar un error o simplemente ignorar el producto
+                // En este ejemplo, ignoraremos el producto y continuaremos con el siguiente
                 continue;
             }
-
-            // Crear una instancia de PedidosProductos
-            $pedidosProducto = new PedidosProductos();
-            $pedidosProducto->setPedido($pedido);
-            $pedidosProducto->setProducto($producto);
-            $pedidosProducto->setUnidades($cantidad);
-    
-            // Agregar el pedidosProducto al pedido
-            $pedido->addPedidosProducto($pedidosProducto);
-            
-            // Persistir el pedidosProducto
-            $entityManager->persist($pedidosProducto);
-            
-            // Reducir el stock del producto
-            $producto->setStock($producto->getStock() - $cantidad);
-            $entityManager->persist($producto);
-        } else {
-            // Manejar el caso en el que el producto no se encuentre en la base de datos
-            // Puedes lanzar una excepción, registrar un error o simplemente ignorar el producto
-            // En este ejemplo, ignoraremos el producto y continuaremos con el siguiente
-            continue;
         }
+
+        // Persistir el pedido
+        $entityManager->persist($pedido);
+        $entityManager->flush();
+
+        // Enviar un correo electrónico al usuario actual con los detalles del pedido
+        $email = (new Email())
+            ->from('pruebasphpdanii@gmail.com')
+            ->to($usuario->getEmail()) // El destinatario es el correo electrónico del usuario actual
+            ->subject('Nuevo pedido creado')
+            ->html('<p>Se ha creado un nuevo pedido.</p><p>Detalles del pedido:</p><p>' . $detallePedido . '</p><p>Precio total del pedido: ' . $precioTotal . ' €</p>');
+
+        $this->mailer->send($email);
+
+        // Limpiar el carrito después de guardar el pedido
+        $session->set('carrito', []);
+
+        // Redirigir a la página de pedidos index
+        return $this->redirectToRoute('app_pedidos_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    // Persistir el pedido
-    $entityManager->persist($pedido);
-    $entityManager->flush();
 
-    // Limpiar el carrito después de guardar el pedido
-    $session->set('carrito', []);
-
-    // Redirigir a la página de pedidos index
-    return $this->redirectToRoute('app_pedidos_index', [], Response::HTTP_SEE_OTHER);
-}
     #[Route('/{id}', name: 'app_pedidos_show', methods: ['GET'])]
     public function show(Pedidos $pedido): Response
     {
