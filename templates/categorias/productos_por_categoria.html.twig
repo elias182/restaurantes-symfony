@@ -9,7 +9,12 @@
     <ul>
         {% for producto in productos %}
             <li>
-                {{ producto.nombre }} - Precio: {{ producto.precio }}
+            <img src="{{ asset('uploads/images/productos/' ~ producto.imagen) }}" alt="Imagen del producto"><br>
+                {{ producto.nombre }} <br>
+                - Precio: {{ producto.precio }}  <br>
+                -Descripcion: {{ producto.descripcion }}<br>
+                -Peso: {{ producto.peso }} Kg.<br>
+                -Unidades: {{ producto.stock }} uds.
                 <form action="{{ path('agregar_al_carrito') }}" method="post">
                         <input type="hidden" name="producto_id" value="{{ producto.id }}">
                         <button type="submit">Agregar al carrito</button>

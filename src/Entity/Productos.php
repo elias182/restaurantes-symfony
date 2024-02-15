@@ -37,6 +37,9 @@ class Productos
     #[ORM\Column]
     private ?float $precio = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $imagen = null;
+
     public function __construct()
     {
         $this->pedidosProductos = new ArrayCollection();
@@ -145,6 +148,18 @@ class Productos
     public function setPrecio(float $precio): static
     {
         $this->precio = $precio;
+
+        return $this;
+    }
+
+    public function getImagen(): ?string
+    {
+        return $this->imagen;
+    }
+
+    public function setImagen(string $imagen): static
+    {
+        $this->imagen = $imagen;
 
         return $this;
     }

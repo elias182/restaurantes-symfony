@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[Route('/categorias')]
 class CategoriasController extends AbstractController
@@ -24,24 +25,49 @@ class CategoriasController extends AbstractController
     }
 
     #[Route('/new', name: 'app_categorias_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $categoria = new Categorias();
-        $form = $this->createForm(CategoriasType::class, $categoria);
-        $form->handleRequest($request);
+public function new(Request $request, EntityManagerInterface $entityManager, Filesystem $filesystem): Response
+{
+    $categoria = new Categorias();
+    $form = $this->createForm(CategoriasType::class, $categoria);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($categoria);
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Manejo de la carga de imagen
+        $imagenFile = $form['imagen']->getData();
+        if ($imagenFile) {
+            $originalFilename = pathinfo($imagenFile->getClientOriginalName(), PATHINFO_FILENAME);
+            // Cambia esto según tu necesidad para guardar la imagen en un directorio adecuado
+            $newFilename = $originalFilename.'-'.uniqid().'.'.$imagenFile->guessExtension();
 
-            return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
+            // Verificar si el directorio existe, si no, crearlo
+            $directorioImagenes = $this->getParameter('imagenes_directorio');
+            if (!$filesystem->exists($directorioImagenes)) {
+                $filesystem->mkdir($directorioImagenes, 0777);
+            }
+
+            try {
+                $imagenFile->move(
+                    $directorioImagenes, // Directorio de destino
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // Manejar excepción si la subida falla
+            }
+            $categoria->setImagen($newFilename);
         }
 
-        return $this->render('categorias/new.html.twig', [
-            'categoria' => $categoria,
-            'form' => $form,
-        ]);
+        $entityManager->persist($categoria);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    return $this->render('categorias/new.html.twig', [
+        'categoria' => $categoria,
+        'form' => $form->createView(),
+    ]);
+}
+
 
     #[Route('/{id}', name: 'app_categorias_show', methods: ['GET'])]
     public function show(Categorias $categoria): Response
@@ -58,6 +84,23 @@ class CategoriasController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Manejo de la carga de imagen
+            $imagenFile = $form['imagen']->getData();
+            if ($imagenFile) {
+                $originalFilename = pathinfo($imagenFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // Cambia esto según tu necesidad para guardar la imagen en un directorio adecuado
+                $newFilename = $originalFilename.'-'.uniqid().'.'.$imagenFile->guessExtension();
+                try {
+                    $imagenFile->move(
+                        $this->getParameter('imagenes_directorio'), // Directorio de destino
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Manejar excepción si la subida falla
+                }
+                $categoria->setImagen($newFilename);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
@@ -65,7 +108,7 @@ class CategoriasController extends AbstractController
 
         return $this->render('categorias/edit.html.twig', [
             'categoria' => $categoria,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

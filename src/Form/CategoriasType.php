@@ -6,6 +6,7 @@ use App\Entity\Categorias;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class CategoriasType extends AbstractType
 {
@@ -14,6 +15,11 @@ class CategoriasType extends AbstractType
         $builder
             ->add('nombre')
             ->add('descripcion')
+            ->add('imagen', FileType::class, [
+                'label' => 'Imagen (JPG, PNG o GIF)',
+                'mapped' => false,
+                'required' => false,
+            ])
         ;
     }
 

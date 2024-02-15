@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ProductosType extends AbstractType
 {
@@ -24,6 +25,11 @@ class ProductosType extends AbstractType
                 'choice_value' => 'id',     // Envía el ID al controlador
             ])
             ->add('precio')
+            ->add('imagen', FileType::class, [
+                'label' => 'Imagen (JPG, PNG o GIF)',
+                'mapped' => false,
+                'required' => false,
+            ])
         ;
     }
 

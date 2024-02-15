@@ -1,0 +1,36 @@
+img{
+    width: 400px;
+    height: 250px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.categorias li{
+    list-style: none;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+.categorias li a{
+    font-size:xx-large;
+    text-decoration: none;
+   
+}
+.categorias li a:link{
+    color: black;
+}
+.categorias li a:visited{
+    color: black;
+}
+.categorias{
+    display: flex;
+    flex-direction: row;
+    column-gap: 100px;
+    flex-wrap: wrap;
+}
+a p{
+    text-align: center;
+}
+.categorias li:hover{
+    transform: scale(1.05);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+}
