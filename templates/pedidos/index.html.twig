@@ -3,6 +3,7 @@
 {% block title %}Pedidos index{% endblock %}
 
 {% block body %}
+{% include 'layout/header.html.twig' %}
     <h1>Pedidos index</h1>
 
     <table class="table">
@@ -11,7 +12,9 @@
                 <th>Id</th>
                 <th>Fecha</th>
                 <th>Estado</th>
+                {% if is_granted('ROLE_ADMIN') %}
                 <th>Actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -30,20 +33,22 @@
                         Desconocido
                     {% endif %}
                 </td>
+                {% if is_granted('ROLE_ADMIN') %}
                 <td>
-                    <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}">Show</a>
-                    <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}">Edit</a>
                     
+                        <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}">Show</a>
+                        <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}">Edit</a>
+                        
                         <form action="{{ path('app_pedidos_confirmar', {'id': pedido.id}) }}" method="post">
                             <button type="submit" class="btn btn-primary">Confirmar</button>
                         </form>
 
-
                         <form action="{{ path('app_pedidos_cancelar', {'id': pedido.id}) }}" method="post">
                             <button type="submit" class="btn btn-danger">Cancelar</button>
                         </form>
-
+                    
                 </td>
+                {% endif %}
             </tr>
         {% else %}
             <tr>
@@ -52,6 +57,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_pedidos_new') }}">Create new</a>
 {% endblock %}

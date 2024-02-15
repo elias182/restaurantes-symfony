@@ -4,51 +4,63 @@
 
 {% block body %}
 {% include 'layout/header.html.twig' %}
-    <h1>Carrito de Compras</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Carrito de Compras</h1>
 
-    {% if carrito is empty %}
-        <p>No hay productos en el carrito.</p>
-    {% else %}
-        <table>
-            <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Peso</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Total por Producto</th> <!-- Nueva columna -->
-                <th>Acciones</th>
-            </tr>
-            {% set totalCarrito = 0 %}
-            {% for producto in carrito %}
-                {% set totalProducto = producto.producto.precio * producto.cantidad %}
-                {% set totalCarrito = totalCarrito + totalProducto %}
-                <tr>
-                    <td>{{ producto.producto.nombre }}</td>
-                    <td>{{ producto.producto.descripcion }}</td>
-                    <td>{{ producto.producto.peso }} Kg.</td>
-                    <td>{{ producto.producto.precio }} €.</td>
-                    <td>
-                        <a href="{{ path('aumentar', {'indice': loop.index0}) }}">+</a>
-                        {{ producto.cantidad }}
-                        <a href="{{ path('disminuir', {'indice': loop.index0}) }}">-</a>
-                    </td>
-                    <td>{{ totalProducto }}</td> <!-- Total por Producto -->
-                    <td><a href="{{ path('eliminar_producto', {'indice': loop.index0}) }}">Eliminar</a></td>
-                </tr>
-            {% endfor %}
-            <tr>
-                <td colspan="5">Total del Carrito</td>
-                <td>{{ totalCarrito }}</td> <!-- Total del Carrito -->
-                <td></td> <!-- Columna vacía para mantener la alineación -->
-            </tr>
-        </table>
-        {% if is_granted('ROLE_USER') %}
-            <a href="{{ path('app_pedidos_new') }}">Comprar</a>
+        {% if carrito is empty %}
+            <p>No hay productos en el carrito.</p>
         {% else %}
-            <p>Debes <a href="{{ path('app_login') }}">iniciar sesión</a> para realizar la compra.</p>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Peso</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Total por Producto</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set totalCarrito = 0 %}
+                        {% for producto in carrito %}
+                            {% set totalProducto = producto.producto.precio * producto.cantidad %}
+                            {% set totalCarrito = totalCarrito + totalProducto %}
+                            <tr>
+                                <td>{{ producto.producto.nombre }}</td>
+                                <td>{{ producto.producto.descripcion }}</td>
+                                <td>{{ producto.producto.peso }} Kg.</td>
+                                <td>{{ producto.producto.precio }} €.</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ path('aumentar', {'indice': loop.index0}) }}" class="btn btn-sm btn-secondary">+</a>
+                                        <span class="btn btn-sm btn-light">{{ producto.cantidad }}</span>
+                                        <a href="{{ path('disminuir', {'indice': loop.index0}) }}" class="btn btn-sm btn-secondary">-</a>
+                                    </div>
+                                </td>
+                                <td>{{ totalProducto }}€</td>
+                                <td><a href="{{ path('eliminar_producto', {'indice': loop.index0}) }}" class="btn btn-sm btn-danger">Eliminar</a></td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="5" class="text-right"><strong>Total del Carrito:</strong></td>
+                            <td><strong>{{ totalCarrito }}€</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('app_pedidos_new') }}" class="btn btn-primary">Comprar</a>
+            {% else %}
+                <p class="mt-3">Debes <a href="{{ path('app_login') }}">iniciar sesión</a> para realizar la compra.</p>
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 
-    <a href="{{path('app_productos_index')}}">Seguir Comprando</a>
+    <div class="container mt-3">
+        <a href="{{path('app_productos_index')}}" class="btn btn-secondary">Seguir Comprando</a>
+    </div>
 {% endblock %}
