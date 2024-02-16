@@ -1,60 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pedidos index{% endblock %}
+{% block title %}Índice de Pedidos{% endblock %}
 
 {% block body %}
-{% include 'layout/header.html.twig' %}
-    <h1>Pedidos index</h1>
+    {% include 'layout/header.html.twig' %}
+    <div class="container mt-5">
+        <h1>Índice de Pedidos</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                {% if is_granted('ROLE_ADMIN') %}
-                <th>Actions</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-        {% for pedido in pedidos %}
-            <tr>
-                <td>{{ pedido.id }}</td>
-                <td>{{ pedido.fecha ? pedido.fecha|date('Y-m-d') : '' }}</td>
-                <td>
-                    {% if pedido.enviado == 0 %}
-                        En proceso
-                    {% elseif pedido.enviado == 1 %}
-                        Enviado
-                    {% elseif pedido.enviado == 2 %}
-                        Cancelado
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <th>Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in pedidos %}
+                        <tr>
+                            <td>{{ pedido.id }}</td>
+                            <td>{{ pedido.fecha ? pedido.fecha|date('Y-m-d') : '' }}</td>
+                            <td>
+                                {% if pedido.enviado == 0 %}
+                                    En proceso
+                                {% elseif pedido.enviado == 1 %}
+                                    Enviado
+                                {% elseif pedido.enviado == 2 %}
+                                    Cancelado
+                                {% else %}
+                                    Desconocido
+                                {% endif %}
+                            </td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <td>
+                                    <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}" class="btn btn-sm btn-primary">Mostrar</a>
+                                    <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}" class="btn btn-sm btn-secondary">Editar</a>
+                                    <form action="{{ path('app_pedidos_confirmar', {'id': pedido.id}) }}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-success">Confirmar</button>
+                                    </form>
+                                    <form action="{{ path('app_pedidos_cancelar', {'id': pedido.id}) }}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger">Cancelar</button>
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
                     {% else %}
-                        Desconocido
-                    {% endif %}
-                </td>
-                {% if is_granted('ROLE_ADMIN') %}
-                <td>
-                    
-                        <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}">Show</a>
-                        <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}">Edit</a>
-                        
-                        <form action="{{ path('app_pedidos_confirmar', {'id': pedido.id}) }}" method="post">
-                            <button type="submit" class="btn btn-primary">Confirmar</button>
-                        </form>
-
-                        <form action="{{ path('app_pedidos_cancelar', {'id': pedido.id}) }}" method="post">
-                            <button type="submit" class="btn btn-danger">Cancelar</button>
-                        </form>
-                    
-                </td>
-                {% endif %}
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">No records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                        <tr>
+                            <td colspan="{% if is_granted('ROLE_ADMIN') %}4{% else %}3{% endif %}">No se encontraron registros.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

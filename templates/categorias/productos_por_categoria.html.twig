@@ -4,24 +4,47 @@
 
 {% block body %}
 {% include 'layout/header.html.twig' %}
+<div class="container mt-5">
     <h1>Productos de la categoría {{ categoria.nombre }}</h1>
 
-    <ul>
-        {% for producto in productos %}
-            <li>
-            <img src="{{ asset('uploads/images/productos/' ~ producto.imagen) }}" alt="Imagen del producto"><br>
-                {{ producto.nombre }} <br>
-                - Precio: {{ producto.precio }}  <br>
-                -Descripcion: {{ producto.descripcion }}<br>
-                -Peso: {{ producto.peso }} Kg.<br>
-                -Unidades: {{ producto.stock }} uds.
-                <form action="{{ path('agregar_al_carrito') }}" method="post">
-                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                        <button type="submit">Agregar al carrito</button>
-                    </form>
-            </li>
-        {% else %}
-            <li>No se encontraron productos para esta categoría.</li>
-        {% endfor %}
-    </ul>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Peso</th>
+                    <th>Stock</th>
+                    <th>Precio</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>
+                        <img src="{{ asset('uploads/images/productos/' ~ producto.imagen) }}" alt="Imagen del producto" width="100">
+                    </td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>{{ producto.peso }} Kg.</td>
+                    <td>{{ producto.stock }} uds.</td>
+                    <td>{{ producto.precio }} €.</td>
+                    <td>
+                        <form action="{{ path('agregar_al_carrito') }}" method="post">
+                            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                            <button type="submit" class="btn btn-success">Agregar al carrito</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">No se encontraron productos para esta categoría.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
