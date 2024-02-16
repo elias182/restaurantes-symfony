@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\PedidosProductos;
 use App\Entity\Productos;
 use App\Form\ProductosType;
 use App\Repository\ProductosRepository;
@@ -135,13 +135,20 @@ class ProductosController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_productos_delete', methods: ['POST'])]
-    public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$producto->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($producto);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_productos_index', [], Response::HTTP_SEE_OTHER);
+public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager): Response
+{
+    // Obtener todos los registros de PedidoProducto asociados al producto
+    $pedidoProductos = $entityManager->getRepository(PedidosProductos::class)->findBy(['producto' => $producto]);
+    
+    // Iterar sobre cada registro de PedidoProducto y eliminarlo
+    foreach ($pedidoProductos as $pedidoProducto) {
+        $entityManager->remove($pedidoProducto);
     }
+
+    // Eliminar el producto
+    $entityManager->remove($producto);
+    $entityManager->flush();
+
+    return $this->redirectToRoute('app_productos_index', [], Response::HTTP_SEE_OTHER);
+}
 }

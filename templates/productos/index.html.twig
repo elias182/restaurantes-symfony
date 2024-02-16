@@ -36,6 +36,12 @@
                                 {% if is_granted('ROLE_ADMIN') and is_granted('ROLE_USER') %}
                                     <a href="{{ path('app_productos_show', {'id': producto.id}) }}" class="btn btn-primary">Show</a>
                                     <a href="{{ path('app_productos_edit', {'id': producto.id}) }}" class="btn btn-secondary">Edit</a>
+                                    <form action="{{ path('app_productos_delete', {'id': producto.id}) }}" method="POST" style="display: inline;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ producto.id) }}">
+                                        <button type="submit" class="btn btn-danger">delete</button>
+                                    </form>
+                                    
                                 {% else %}
                                 <form action="{{ path('agregar_al_carrito') }}" method="post">
                                     <input type="hidden" name="producto_id" value="{{ producto.id }}">
