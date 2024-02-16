@@ -1,25 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Registro{% endblock %}
 
 {% block body %}
-{% include 'layout/header.html.twig' %}
+    {% include 'layout/header.html.twig' %}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <div class="container mt-5">
+        <h1>Registro</h1>
 
-    {{ form_errors(registrationForm) }}
+        <form method="post">
+            {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-        {{ form_row(registrationForm) }}
-        <button type="submit" class="btn">Register</button>
-        {{ form_end(registrationForm) }}
-    
+            <div class="form-group">
+                {{ form_label(registrationForm.email, 'Correo electrónico', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword, 'Contraseña', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.pais, 'País', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.pais, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.cp, 'Código Postal', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.cp, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.ciudad, 'Ciudad', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.ciudad, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.direccion, 'Dirección', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(registrationForm.direccion, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-check">
+                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(registrationForm.agreeTerms, 'Acepto los términos y condiciones', {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+            {{ form_end(registrationForm) }}
+        </form>
+    </div>
 {% endblock %}
