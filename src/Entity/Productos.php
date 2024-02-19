@@ -40,6 +40,9 @@ class Productos
     #[ORM\Column(length: 255)]
     private ?string $imagen = null;
 
+    #[ORM\Column]
+    private ?bool $catalogado = true;
+
     public function __construct()
     {
         $this->pedidosProductos = new ArrayCollection();
@@ -160,6 +163,18 @@ class Productos
     public function setImagen(string $imagen): static
     {
         $this->imagen = $imagen;
+
+        return $this;
+    }
+
+    public function isCatalogado(): ?bool
+    {
+        return $this->catalogado;
+    }
+
+    public function setCatalogado(bool $catalogado): static
+    {
+        $this->catalogado = $catalogado;
 
         return $this;
     }

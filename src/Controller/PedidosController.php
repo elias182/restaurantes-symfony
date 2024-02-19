@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Entity\Restaurantes;
 
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -145,8 +146,12 @@ class PedidosController extends AbstractController
     #[Route('/{id}', name: 'app_pedidos_show', methods: ['GET'])]
     public function show(Pedidos $pedido): Response
     {
+        // Obtener el restaurante asociado al pedido
+        $restaurante = $pedido->getRestaurante();
+    
         return $this->render('pedidos/show.html.twig', [
             'pedido' => $pedido,
+            'restaurante' => $restaurante,
         ]);
     }
 

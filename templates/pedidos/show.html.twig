@@ -20,8 +20,20 @@
                             <td>{{ pedido.fecha ? pedido.fecha|date('Y-m-d') : '' }}</td>
                         </tr>
                         <tr>
+                            <th scope="row">Comprador</th>
+                            <td>{{ restaurante.email }}</td>
+                        </tr>
+                        <tr>
                             <th scope="row">Enviado</th>
-                            <td>{{ pedido.enviado }}</td>
+                            <td>
+                                {% if pedido.enviado == 1 %}
+                                    Enviado
+                                {% elseif pedido.enviado == 2 %}
+                                    Cancelado
+                                {% else %}
+                                    No enviado
+                                {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -31,7 +43,6 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <a href="{{ path('app_pedidos_index') }}" class="btn btn-secondary">Volver a la lista</a>
-                <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}" class="btn btn-primary">Editar</a>
             </div>
         </div>
     </div>

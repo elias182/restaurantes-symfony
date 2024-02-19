@@ -137,20 +137,41 @@ class ProductosController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_productos_delete', methods: ['POST'])]
-public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager): Response
-{
-    // Obtener todos los registros de PedidoProducto asociados al producto
-    $pedidoProductos = $entityManager->getRepository(PedidosProductos::class)->findBy(['producto' => $producto]);
+    public function delete(Request $request, Productos $producto, EntityManagerInterface $entityManager): Response
+    {
+        // Obtener todos los registros de PedidoProducto asociados al producto
+        $pedidoProductos = $entityManager->getRepository(PedidosProductos::class)->findBy(['producto' => $producto]);
     
-    // Iterar sobre cada registro de PedidoProducto y eliminarlo
-    foreach ($pedidoProductos as $pedidoProducto) {
-        $entityManager->remove($pedidoProducto);
+        // Si hay pedidos asociados, marcar el producto como no catalogado
+        if (!empty($pedidoProductos)) {
+            $producto->setCatalogado(false);
+            $entityManager->persist($producto);
+        } else {
+            // Si no hay pedidos asociados, eliminar el producto y sus asociaciones
+            foreach ($pedidoProductos as $pedidoProducto) {
+                $entityManager->remove($pedidoProducto);
+            }
+    
+            $entityManager->remove($producto);
+        }
+    
+        $entityManager->flush();
+    
+        return $this->redirectToRoute('app_productos_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    // Eliminar el producto
-    $entityManager->remove($producto);
-    $entityManager->flush();
 
-    return $this->redirectToRoute('app_productos_index', [], Response::HTTP_SEE_OTHER);
-}
+    #[Route('/{id}/catalogar', name: 'app_productos_catalogar', methods: ['POST'])]
+    public function catalogar(Request $request, Productos $producto, EntityManagerInterface $entityManager): Response
+    {
+        // Verificar si el usuario tiene permisos suficientes (por ejemplo, ROLE_ADMIN)
+
+        // Actualizar el estado del producto a catalogado
+        $producto->setCatalogado(true);
+        $entityManager->persist($producto);
+        $entityManager->flush();
+
+        // Redirigir a alguna página, como la lista de productos
+        return $this->redirectToRoute('app_productos_index');
+    }
 }

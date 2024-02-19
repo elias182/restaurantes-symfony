@@ -117,14 +117,22 @@ public function new(Request $request, EntityManagerInterface $entityManager, Fil
     #[Route('/{id}', name: 'app_categorias_delete', methods: ['POST'])]
     public function delete(Request $request, Categorias $categoria, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$categoria->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($categoria);
-            $entityManager->flush();
+        $productos = $categoria->getProductos();
+    
+        // Verificar si la categoría tiene productos asociados
+        if (!$productos->isEmpty()) {
+            $this->addFlash('error', 'No se puede eliminar la categoría porque contiene productos asociados.');
+        } else {
+            // Si la categoría no tiene productos asociados, eliminarla
+            if ($this->isCsrfTokenValid('delete'.$categoria->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($categoria);
+                $entityManager->flush();
+                $this->addFlash('success', 'Categoría eliminada correctamente.');
+            }
         }
-
+    
         return $this->redirectToRoute('app_categorias_index', [], Response::HTTP_SEE_OTHER);
     }
-
     #[Route('/{id}/productos', name: 'productos_por_categoria', methods: ['GET'])]
     public function productosPorCategoria(?Categorias $categoria, ProductosRepository $productosRepository): Response
     {

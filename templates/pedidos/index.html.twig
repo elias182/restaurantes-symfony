@@ -38,7 +38,6 @@
                             {% if is_granted('ROLE_ADMIN') %}
                                 <td>
                                     <a href="{{ path('app_pedidos_show', {'id': pedido.id}) }}" class="btn btn-sm btn-primary">Mostrar</a>
-                                    <a href="{{ path('app_pedidos_edit', {'id': pedido.id}) }}" class="btn btn-sm btn-secondary">Editar</a>
                                     <form action="{{ path('app_pedidos_confirmar', {'id': pedido.id}) }}" method="post" style="display: inline;">
                                         <button type="submit" class="btn btn-sm btn-success">Confirmar</button>
                                     </form>
