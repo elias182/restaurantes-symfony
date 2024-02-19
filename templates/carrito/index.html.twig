@@ -35,9 +35,9 @@
                                 <td>{{ producto.producto.precio }} €.</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ path('aumentar', {'indice': loop.index0}) }}" class="btn btn-sm btn-secondary">+</a>
-                                        <span class="btn btn-sm btn-light">{{ producto.cantidad }}</span>
                                         <a href="{{ path('disminuir', {'indice': loop.index0}) }}" class="btn btn-sm btn-secondary">-</a>
+                                        <span class="btn btn-sm btn-light">{{ producto.cantidad }}</span>
+                                        <a href="{{ path('aumentar', {'indice': loop.index0}) }}" class="btn btn-sm btn-secondary">+</a>
                                     </div>
                                 </td>
                                 <td>{{ totalProducto }}€</td>

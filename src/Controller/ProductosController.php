@@ -57,6 +57,8 @@ class ProductosController extends AbstractController
 
                 // Asignar el nombre del archivo de imagen al producto
                 $producto->setImagen($nombreArchivo);
+            }else {
+                $producto->setImagen('default.jpg'); 
             }
 
             $entityManager->persist($producto);

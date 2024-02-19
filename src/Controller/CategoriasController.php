@@ -54,6 +54,8 @@ public function new(Request $request, EntityManagerInterface $entityManager, Fil
                 // Manejar excepción si la subida falla
             }
             $categoria->setImagen($newFilename);
+        }else {
+            $categoria->setImagen('default.jpg'); 
         }
 
         $entityManager->persist($categoria);
